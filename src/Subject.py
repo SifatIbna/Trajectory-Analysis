@@ -29,21 +29,12 @@ class Subject(ISubject):
     def find_leader_follower(self, T1, T2):
         d1 = calc_distance(T1['Latitude'], T1['Longitude'], T2['Latitude'], T2['Longitude']) - 3  # Subtract vehicle length
 
-        print("Distance 1:", d1)
-
         d2 = calc_distance(T1['Latitude'].shift(-1), T1['Longitude'].shift(-1), T2['Latitude'].shift(-1), T2['Longitude'].shift(-1)) - 3  # Subtract vehicle length
-
-        print("Distance 2: ",d2)
 
         v1 = d1.diff() / (T1['Time (s)'].diff() / 1000)  # Relative speed
         v2 = d2.diff() / (T2['Time (s)'].diff() / 1000)  # Relative speed
 
-        print("V1: ",v1)
-        print("V2: ",v2)
-
         TTC = calc_TTC(d1 - d2, v2 - v1)  # Minimum TTC
-
-        print(TTC)
 
         idx_min_TTC = np.argmin(TTC)
         if d1.iloc[idx_min_TTC] < d2.iloc[idx_min_TTC]:
